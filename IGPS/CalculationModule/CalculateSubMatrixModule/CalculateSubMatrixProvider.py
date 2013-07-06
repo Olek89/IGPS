@@ -21,7 +21,7 @@ class CalculateSubMatrixProvider():
     
     def FAKE(self):
         from DataModels import Matrix as M
-        size = 12
+        size = 9
         subMatrix = M.Matrix(size)
         for i in range(size):
             for j in range(size):

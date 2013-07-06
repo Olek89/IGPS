@@ -9,7 +9,7 @@ from ConfigurationModule import Configuration as C
 class HomeNodeDbBeaconPositionRecord():
     currentId = 0
     
-    def __init__(self, messageHeader, positionMatrix):
+    def __init__(self, messageHeader):
         self.recordId = self.currentId
         self.currentId += 1
         

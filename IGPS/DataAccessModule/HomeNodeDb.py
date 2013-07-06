@@ -59,31 +59,39 @@ class HomeNodeDb():
             if record.messageHeader == messageHeader: 
                 if record.receivingNodeId == nodeId:
                     record.receivingNodePosition = position
+                    record.receivingNodeStatus   = NSE.NodeStatesEnumerator.POSRECEIVED
                     anyWasChanged = True
         if anyWasChanged == False:
             raise Exception("Nothing to change.")
         
-    def GetReceivingNodePosition(self, messageHeader, nodeId):
+    def GetRecordForMessageHeaderAndNodeId(self, messageHeader, nodeId):
         for record in self._recordList:
             if record.messageHeader == messageHeader: 
                 if record.receivingNodeId == nodeId:
-                    return record.receivingNodePosition
-        raise Exception("Missing record.")
+                    return record
+        raise Exception("No record for given header and node ID.")
     
     #===========================================================================
     # Final data
     #===========================================================================
+    def GetBeaconPositionMatrix(self, messageHeader):
+        for record in self._beaconPositionList:
+            if record.messageHeader == messageHeader: 
+                return record.positionMatrix
+        # Not yet created
+        positionRecord = HNDBPR.HomeNodeDbBeaconPositionRecord(messageHeader = messageHeader)
+        self._beaconPositionList.append(positionRecord)
+        return positionRecord.positionMatrix
     
-    def YieldOverSubMatrices(self, messageHeader):
-        for record in self._recordList:
-            if record.messageHeader == messageHeader:
-                if record.receivingNodeStatus == NSE.NodeStatesEnumerator.END:
-#                     if record.receivingNodePosition != None and record.calculatedSubMatrix != None:
-                    yield (record.receivingNodePosition, record.calculatedSubMatrix)
-    
-    def RegisterBeaconPositionMatrix(self, messageHeader, matrix):
-        newRecord = HNDBPR.HomeNodeDbBeaconPositionRecord(messageHeader = messageHeader, positionMatrix = matrix)
-        self._beaconPositionList.append(newRecord)
+    def UpdateBeaconPositionMatrix(self, messageHeader, matrix):
+        anyWasChanged = False
+        for record in self._beaconPositionList:
+            if record.messageHeader == messageHeader: 
+                record.positionMatrix = matrix
+                anyWasChanged = True
+        if anyWasChanged == False:
+            raise Exception("Nothing to change.")
+        
         
     def __str__(self):
         return "\n".join([str(record) for record in self._beaconPositionList ])

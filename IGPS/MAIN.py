@@ -19,8 +19,9 @@ def MAIN_SIM():
             process.start()
             
         SendFakeBeaconSignalForNodes(nodesList)
-        
-        time.sleep(2000) # wait for computations and debug
+        #time.sleep(20)
+        while True:
+            time.sleep(0.01) # wait for computations and debug
     
     except:
         raise

@@ -12,6 +12,7 @@ class MessageTypes():
     WHANT_SUB_MATRIX            = "WHANT"
     SUB_MATRIX_PART             = "SUB"
     SUB_MATRIX_END              = "END"
+    ASK_FOREIGN_NODE_POSITION   = "ASKPOS"
     FOREIGN_NODE_POSITION       = "POS"
 
 if __name__ == "__main__":

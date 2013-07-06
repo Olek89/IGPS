@@ -3,12 +3,12 @@ Created on 24-03-2013
 
 @author: Olek
 '''
-import random
 
 class Configuration():
-
-    subMatrixSize = 101  # assumed that single cell is 1 x 1 meter
-    matrixSize    = 201 # assumed that single cell is 1 x 1 meter
+    minNumberToStartMatrixCreation = 3
+    
+    subMatrixSize = 1001  # assumed that single cell is 1 x 1 meter
+    matrixSize    = 1101 # assumed that single cell is 1 x 1 meter
     
     # TODO: Remove fake mechanism
     fakePositionMin = 20

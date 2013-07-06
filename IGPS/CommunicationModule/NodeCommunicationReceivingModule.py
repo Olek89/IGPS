@@ -26,9 +26,10 @@ class NodeCommunicationReceivingModule():
         self.onSignalReceivedAtForeignNode = EH.EventHook()
         self.onAskedForCalculateSubMatrix = EH.EventHook()
         self.onEndOfPreparingPartialResultByForeignNode = EH.EventHook()
-        self.onRequestToStartSendingPartialResult = EH.EventHook()
+        self.onRequestToSendPartialResult = EH.EventHook()
         self.onPartialResult = EH.EventHook()
         self.onSubMatrixSendingEnd = EH.EventHook()
+        self.onReceivingAskOfNodePosition = EH.EventHook()
         self.onReceivingNodePosition = EH.EventHook()
         
     def Start(self):
@@ -59,6 +60,7 @@ class NodeCommunicationReceivingModule():
         logging.debug("Node receiver ends at: {0}".format(str(self.nodeId)))
     
     def _DataFromOtherNode(self, rawData):
+        logging.debug("Node {0} received:  {1}".format(self.nodeId, rawData))
         if  MT.MessageTypes.RECEIVED_BEACON_SIGNAL in rawData:
             parsedData = DFON.DataFromOtherNode(rawData.split(MT.MessageTypes.RECEIVED_BEACON_SIGNAL))
             self.onSignalReceivedAtForeignNode(parsedData)
@@ -73,7 +75,7 @@ class NodeCommunicationReceivingModule():
         
         elif MT.MessageTypes.WHANT_SUB_MATRIX in rawData:
             parsedData = DFON.DataFromOtherNode(rawData.split(MT.MessageTypes.WHANT_SUB_MATRIX))
-            self.onRequestToStartSendingPartialResult(parsedData)
+            self.onRequestToSendPartialResult(parsedData)
         
         elif MT.MessageTypes.SUB_MATRIX_PART in rawData:
             splitedData = rawData.split(MT.MessageTypes.SUB_MATRIX_PART)
@@ -83,6 +85,10 @@ class NodeCommunicationReceivingModule():
         elif MT.MessageTypes.SUB_MATRIX_END in rawData:
             parsedData = DFON.DataFromOtherNode(rawData.split(MT.MessageTypes.SUB_MATRIX_END))
             self.onSubMatrixSendingEnd(parsedData)
+        
+        elif MT.MessageTypes.ASK_FOREIGN_NODE_POSITION in rawData:
+            parsedData = DFON.DataFromOtherNode(rawData.split(MT.MessageTypes.ASK_FOREIGN_NODE_POSITION))
+            self.onReceivingAskOfNodePosition(parsedData)
         
         elif MT.MessageTypes.FOREIGN_NODE_POSITION in rawData:
             splitedData = rawData.split(MT.MessageTypes.FOREIGN_NODE_POSITION)

@@ -10,52 +10,67 @@ from DataModels import DataToOtherNode as DTON
 
 class NodeCommunicationSendingModule():
 
-    def __init__(self, sourceNodeId, referenceBeaconMessage):
+    def __init__(self, sourceNodeId, messageHeader):
         self.dataToOtherNode = DTON.DataToOtherNode(sendingNodeId = sourceNodeId,
-                                                    messageHeader = referenceBeaconMessage)
+                                                    messageHeader = messageHeader)
     
-    def _SendMessageToNode(self, message, nodeId):
-        contact = NCCP.NodeConnectionConfigurationProvider(nodeId) 
-        logging.info("Node {0} to node {1}: {2}".format(self.dataToOtherNode.sendingNodeId, nodeId, message))
+    def _SendMessageToNode(self, messages, nodeId):
+        contact = NCCP.NodeConnectionConfigurationProvider(nodeId)
+        for message in messages:
+            logging.info("Node {0} to node {1}: {2}".format(self.dataToOtherNode.sendingNodeId, nodeId, message))
         
         sock = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
-        sock.sendto( message, (contact.nodeIp, contact.nodePort) )
+        for message in messages:
+            sock.sendto( message, (contact.nodeIp, contact.nodePort) )
         sock.close()
         
     def InformHomeAboutNewBeaconSignalReceive(self, destinationNodeId):
         dataToSend = self.dataToOtherNode.GetCommonMessageList()
         message = self._JoinMessage( MT.MessageTypes.RECEIVED_BEACON_SIGNAL, dataToSend)
-        self._SendMessageToNode(message, destinationNodeId)
+        self._SendMessageToNode([message], destinationNodeId)
         
     def AskNodeToPrepareSubMatrix(self, destinationNodeId):
         dataToSend = self.dataToOtherNode.GetCommonMessageList()
         message = self._JoinMessage( MT.MessageTypes.ASKED_TO_PREPARE_SUB_MATRIX, dataToSend)
-        self._SendMessageToNode(message, destinationNodeId)
+        self._SendMessageToNode([message], destinationNodeId)
         
     def InformHomeThatSubMatrixWasCreated(self, destinationNodeId):
         dataToSend = self.dataToOtherNode.GetCommonMessageList()
         message = self._JoinMessage( MT.MessageTypes.SUB_MATRIX_CREATED, dataToSend )
-        self._SendMessageToNode(message, destinationNodeId)
+        self._SendMessageToNode([message], destinationNodeId)
         
     def RequestNodeToStartSubMatrixTransfer(self, destinationNodeId):
         dataToSend = self.dataToOtherNode.GetCommonMessageList()
         message = self._JoinMessage( MT.MessageTypes.WHANT_SUB_MATRIX, dataToSend )
-        self._SendMessageToNode(message, destinationNodeId)
+        self._SendMessageToNode([message], destinationNodeId)
         
-    def SendSubMatrixCellToNode(self, destinationNodeId, subMatrixX, subMatrixY, subMatrixZ, subMatrixValue):
-        dataToSend = self.dataToOtherNode.GetSubMatrixMessageList(subMatrixX, subMatrixY, subMatrixZ, subMatrixValue)
-        message = self._JoinMessage( MT.MessageTypes.SUB_MATRIX_PART, dataToSend )
-        self._SendMessageToNode(message, destinationNodeId)
-        
-    def SendEndOfSubMatrixIndicator(self, destinationNodeId):
+    def SendSubMatrixToNode(self, destinationNodeId, subMatrix):
+        messages = []
+        # TODO: modify for 3D model
+        for x in range(len(subMatrix.data)):
+            for y in range(len(subMatrix.data[x])):
+                value = subMatrix.data[x][y]
+                if 0 != value:
+                    dataToSend = self.dataToOtherNode.GetSubMatrixMessageList(subMatrixX = x,
+                                                                              subMatrixY = y,
+                                                                              subMatrixZ = 0,
+                                                                              subMatrixValue = value)
+                    message = self._JoinMessage( MT.MessageTypes.SUB_MATRIX_PART, dataToSend )
+                    messages.append(message)
         dataToSend = self.dataToOtherNode.GetCommonMessageList()
         message = self._JoinMessage( MT.MessageTypes.SUB_MATRIX_END, dataToSend )
-        self._SendMessageToNode(message, destinationNodeId)
+        messages.append(message)
+        self._SendMessageToNode(messages, destinationNodeId)
         
-    def SendSelfPositionToNode(self, destinationNodeId, otherNodePositionX, otherNodePositionY, otherNodePositionZ):
-        dataToSend = self.dataToOtherNode.GetNodePossitionMessageList(otherNodePositionX, otherNodePositionY, otherNodePositionZ)
+    def AskNodeToSendItsPosition(self, destinationNodeId):
+        dataToSend = self.dataToOtherNode.GetCommonMessageList()
+        message = self._JoinMessage( MT.MessageTypes.ASK_FOREIGN_NODE_POSITION, dataToSend)
+        self._SendMessageToNode([message], destinationNodeId)
+        
+    def SendSelfPositionToNode(self, destinationNodeId, otherNodePosition):
+        dataToSend = self.dataToOtherNode.GetNodePossitionMessageList(otherNodePosition.X, otherNodePosition.Y, otherNodePosition.Z)
         message = self._JoinMessage( MT.MessageTypes.FOREIGN_NODE_POSITION, dataToSend )
-        self._SendMessageToNode(message, destinationNodeId)
+        self._SendMessageToNode([message], destinationNodeId)
         
     def _JoinMessage(self, joinWord, listOfElementsToJoin):
         return joinWord.join(str(x) for x in listOfElementsToJoin)
