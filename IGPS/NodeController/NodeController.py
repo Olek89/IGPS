@@ -194,7 +194,6 @@ class NodeController():
                     #for zLocal in range(len(subMatrix.data[xLocal][yLocal])):
                     if True: #TODO: subMatrix.data[xLocal][yLocal] != 0:
                         matrix.data[nodePosition.X + xLocal][nodePosition.Y + yLocal] += \
-                            matrix.data[nodePosition.X + xLocal][nodePosition.Y + yLocal] + \
                             subMatrix.data[xLocal][yLocal]
         self.homeNodeDb.RegisterBeaconPositionMatrix(messageHeader = messageHeader, matrix = matrix)
         self.isCurrentlyComputing = False
