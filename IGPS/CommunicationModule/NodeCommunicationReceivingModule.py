@@ -41,7 +41,7 @@ class NodeCommunicationReceivingModule():
     def Stop(self):
         if self.launched:
             self.launched = False
-            self.process.join(timeout=1)
+            self.process.join(timeout = 2)
             self.process._Thread__stop()
         
     def _MessageExpecting(self):

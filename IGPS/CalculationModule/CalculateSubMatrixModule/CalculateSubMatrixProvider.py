@@ -15,15 +15,15 @@ class CalculateSubMatrixProvider():
     def CalculateSubMatrix(self, beaconTimeStamp, receivingTime):
         radius = self.radiusCalculateUnit.CalculateRadiusBasedOnDelay(beaconTimeStamp, receivingTime)
         # TODO: Turn on real submatrix generation
+        subMatrix = self.FAKE()
+#         subMatrix = self.subMatrixGenerator.ActualGenerateSubMatix(radius)
+        return subMatrix
+    
+    def FAKE(self):
         from DataModels import Matrix as M
-        subMatrix = M.Matrix(3)
-        subMatrix.data[0][0] = 1
-        subMatrix.data[0][1] = 1
-        subMatrix.data[0][2] = 1
-        subMatrix.data[1][0] = 1
-        subMatrix.data[1][2] = 1
-        subMatrix.data[2][0] = 1
-        subMatrix.data[2][1] = 1
-        subMatrix.data[2][2] = 1
-        #subMatrix = self.subMatrixGenerator.ActualGenerateSubMatix(radius)
+        size = 12
+        subMatrix = M.Matrix(size)
+        for i in range(size):
+            for j in range(size):
+                subMatrix.data[i][j] = 1
         return subMatrix

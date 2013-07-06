@@ -25,7 +25,7 @@ class BeaconCommunicationModule():
     def _BeaconExpecting(self):
         #TODO: Communication with real device
         while self.launched:
-            time.sleep(1)
+            time.sleep(0.1)
 
 if __name__ == "__main__":
     pass

@@ -192,6 +192,7 @@ class NodeController():
                 for yLocal in range(len(subMatrix.data[xLocal])):
                     # TODO: Add 3D
                     #for zLocal in range(len(subMatrix.data[xLocal][yLocal])):
+                    logging.debug("Will add {0} to x:{1} y:{2}".format(subMatrix.data[xLocal][yLocal], nodePosition.X + xLocal, nodePosition.Y + yLocal))
                     if True: #TODO: subMatrix.data[xLocal][yLocal] != 0:
                         matrix.data[nodePosition.X + xLocal][nodePosition.Y + yLocal] += \
                             subMatrix.data[xLocal][yLocal]

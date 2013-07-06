@@ -7,6 +7,7 @@ Created on 03-05-2013
 from DataModels import MessageHeader as MH
 from NodeController import NodeController as NC
 import logging
+import threading
 import datetime, time, random
 
 def MAIN_SIM():
@@ -14,10 +15,12 @@ def MAIN_SIM():
         
     try:
         for node in nodesList:
-            node.StartNode()
+            process = threading.Thread(target = node.StartNode)
+            process.start()
             
         SendFakeBeaconSignalForNodes(nodesList)
-        #time.sleep(150) # wait for computations and debug
+        
+        time.sleep(2000) # wait for computations and debug
     
     except:
         raise
@@ -37,7 +40,7 @@ def SendFakeBeaconSignalForNodes(nodesList):
     messageHeader = MH.MessageHeader(beaconId = 1, homeNodeId = nodesList[-1].nodeId, beaconTimeStamp = datetime.datetime.now())
     time.sleep(1)
     for node in nodesList:
-        microseconds = random.Random().randint(10000, 20000)
+        microseconds = random.Random().randint(20000, 30000)
         receivingTime = messageHeader.beaconTimeStamp + datetime.timedelta(microseconds = microseconds)
         logging.info("Send fake beacon signal to node {}".format(node.nodeId))
         node.beaconReceiver.onBeaconSignalReceive(messageHeader, receivingTime) # Fire event
