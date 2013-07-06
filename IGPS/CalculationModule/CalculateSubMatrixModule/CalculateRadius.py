@@ -21,3 +21,6 @@ class CalculateRadius():
         radius = int(radius * timeAccuracy) #TODO: remove workaround
         logging.debug("Radius calculated: {0}".format(radius))
         return radius
+    
+if __name__ == "__main__":
+    pass

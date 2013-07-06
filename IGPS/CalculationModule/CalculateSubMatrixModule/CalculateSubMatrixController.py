@@ -15,3 +15,6 @@ class CalculateSubMatrixController():
         endTime = record.receivingTime
         subMatrix = self.subMatrixProvider.CalculateSubMatrix(startTime, endTime) #TODO: quality
         return subMatrix
+    
+if __name__ == "__main__":
+    pass

@@ -25,3 +25,6 @@ class EventHook:
     __isub__ = deregisterForEvent
     __call__ = fireEvent
     __len__  = getHandlerCount
+    
+if __name__ == "__main__":
+    pass

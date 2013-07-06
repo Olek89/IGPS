@@ -181,5 +181,6 @@ class NodeController():
                                                                               newState      = NSE.NodeStatesEnumerator.WHANT)
         else:
             logging.critical(self.homeNodeDb.GetBeaconPositionMatrix(messageHeader = messageHeader))
+            
 if __name__ == "__main__":
     pass

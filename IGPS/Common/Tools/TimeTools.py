@@ -14,3 +14,6 @@ def GetStartTime():
 def GetEndTime():
     seconds = random.Random().random()
     return datetime.datetime.now() + datetime.timedelta(seconds = seconds)
+
+if __name__ == "__main__":
+    pass

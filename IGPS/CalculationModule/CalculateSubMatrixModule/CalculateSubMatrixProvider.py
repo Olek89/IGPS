@@ -29,3 +29,6 @@ class CalculateSubMatrixProvider():
             for j in range(size):
                 subMatrix.data[i][j] = 1
         return subMatrix
+    
+if __name__ == "__main__":
+    pass

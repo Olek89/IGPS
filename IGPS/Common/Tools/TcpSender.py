@@ -12,3 +12,6 @@ def SendMessageToNode(nodeId, MSG):
     sock = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
     sock.sendto( MSG, (nodeContact.nodeIp, nodeContact.nodePort) )
     sock.close()
+    
+if __name__ == "__main__":
+    pass

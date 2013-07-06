@@ -16,3 +16,6 @@ class NodeRecord():
     def __str__(self):
         hasSubMatrix = self.subMatrix != None
         return "id:{0}\n header:{1}\n received:{2} \n hasSubMatrix:{3}".format(self.recordId, self.messageHeader, self.receivingTime, hasSubMatrix)
+    
+if __name__ == "__main__":
+    pass
