@@ -4,6 +4,7 @@ Created on 20-03-2013
 @author: Olek
 '''
 from CalculateRadius import CalculateRadius
+from ConfigurationModule import Configuration as C
 from _GenerateSubMatrix import _GenerateSubMatrix
 
 class CalculateSubMatrixProvider():
@@ -13,15 +14,16 @@ class CalculateSubMatrixProvider():
         self.subMatrixGenerator = _GenerateSubMatrix()
     
     def CalculateSubMatrix(self, beaconTimeStamp, receivingTime):
-        radius = self.radiusCalculateUnit.CalculateRadiusBasedOnDelay(beaconTimeStamp, receivingTime)
-        # TODO: Turn on real submatrix generation
-        subMatrix = self.FAKE()
-#         subMatrix = self.subMatrixGenerator.ActualGenerateSubMatix(radius)
+        if C.Configuration.useFakeCalculationModule == True:
+            subMatrix = self.FAKE()
+        else:
+            radius = self.radiusCalculateUnit.CalculateRadiusBasedOnDelay(beaconTimeStamp, receivingTime)
+            subMatrix = self.subMatrixGenerator.ActualGenerateSubMatix(radius)
         return subMatrix
     
     def FAKE(self):
         from DataModels import Matrix as M
-        size = 9
+        size = C.Configuration.fakeSize
         subMatrix = M.Matrix(size)
         for i in range(size):
             for j in range(size):

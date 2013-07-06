@@ -14,5 +14,8 @@ class Configuration():
     fakePositionMin = 20
     fakePositionMax = 60
     
+    useFakeCalculationModule = True
+    fakeSize = 2 # When greater then 13 issue appears
+    
 if __name__ == "__main__":
     pass

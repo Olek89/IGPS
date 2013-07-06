@@ -54,7 +54,6 @@ class NodeCommunicationReceivingModule():
         while self.launched:
             data, addr = self.node_sock.recvfrom( 1024 )  # @UnusedVariable
             if data is not None:
-                #logging.debug("Node {0} received : {1}".format(str(self.nodeId), data))
                 self._DataFromOtherNode(data)
         self.node_sock.close()
         logging.debug("Node receiver ends at: {0}".format(str(self.nodeId)))
