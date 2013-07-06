@@ -40,7 +40,7 @@ def SendFakeBeaconSignalForNodes(nodesList):
     for node in nodesList:
         microseconds = random.Random().randint(20000, 30000)
         receivingTime = messageHeader.beaconTimeStamp + datetime.timedelta(microseconds = microseconds)
-        logging.info("Send fake beacon signal to node {}".format(node.nodeId))
+        logging.info("Send fake beacon signal to node {0}".format(node.nodeId))
         node.beaconReceiver.onBeaconSignalReceive(messageHeader, receivingTime) # Fire event
         time.sleep(0.2) # Introduce communication delays
 
