@@ -17,11 +17,13 @@ class CalculateSubMatrixProvider():
         # TODO: Turn on real submatrix generation
         from DataModels import Matrix as M
         subMatrix = M.Matrix(3)
-        subMatrix.data[1][2] = 1
+        subMatrix.data[0][0] = 1
+        subMatrix.data[0][1] = 1
         subMatrix.data[0][2] = 1
-        subMatrix.data[2][2] = 1
         subMatrix.data[1][0] = 1
-        subMatrix.data[1][1] = 1
         subMatrix.data[1][2] = 1
+        subMatrix.data[2][0] = 1
+        subMatrix.data[2][1] = 1
+        subMatrix.data[2][2] = 1
         #subMatrix = self.subMatrixGenerator.ActualGenerateSubMatix(radius)
         return subMatrix
