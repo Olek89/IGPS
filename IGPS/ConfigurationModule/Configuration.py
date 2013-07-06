@@ -5,6 +5,7 @@ Created on 24-03-2013
 '''
 
 class Configuration():
+    #TODO: Cleanup configuration
     minNumberToStartMatrixCreation = 3
     
     subMatrixSize = 1001  # assumed that single cell is 1 x 1 meter
@@ -14,8 +15,11 @@ class Configuration():
     fakePositionMin = 20
     fakePositionMax = 60
     
+    #TODO: Turn off fake mechanism
     useFakeCalculationModule = True
-    fakeSize = 2 # When greater then 13 issue appears
+    fakeSize = 5 # When greater then 13 issue appears
+    
+    nodesIdToBeCreated = [2, 3, 6]
     
 if __name__ == "__main__":
     pass

@@ -3,11 +3,10 @@ Created on 03-05-2013
 
 @author: Olek
 '''
-
+from ConfigurationModule import Configuration as C
 from DataModels import MessageHeader as MH
 from NodeController import NodeController as NC
 import logging
-import threading
 import datetime, time, random
 
 def MAIN_SIM():
@@ -15,14 +14,12 @@ def MAIN_SIM():
         
     try:
         for node in nodesList:
-            process = threading.Thread(target = node.StartNode)
-            process.start()
+            node.StartNode()
             
         SendFakeBeaconSignalForNodes(nodesList)
-        #time.sleep(20)
-        while True:
-            time.sleep(0.01) # wait for computations and debug
-    
+        
+        raw_input("Enter to end simulation...")
+       
     except:
         raise
     
@@ -31,9 +28,9 @@ def MAIN_SIM():
             node.StopNode()
     print "SIMULATION ENDS"
     
-def CreateNodes(nodesIdToBeCreated = [2, 3, 6]):#, 1, 3, 4]):
+def CreateNodes():
     nodesList = []
-    for nodeId in nodesIdToBeCreated:
+    for nodeId in C.Configuration.nodesIdToBeCreated:
         nodesList.append(NC.NodeController (nodeId))
     return nodesList
 
@@ -48,10 +45,6 @@ def SendFakeBeaconSignalForNodes(nodesList):
         time.sleep(0.2) # Introduce communication delays
 
 if __name__== '__main__':
-#     logging.basicConfig(format='%(asctime)s.%(msecs)03d %(message)-80s %(filename)-40s at line:%(lineno)-3d func: %(funcName)-35s thread: %(thread)-5d ',
-#                         datefmt="%H:%M:%S",
-# #                        level=logging.INFO)
-#                         level=logging.DEBUG)
     logging.basicConfig(format='%(asctime)s.%(msecs)03d %(message)-80s %(filename)-40s at line:%(lineno)-3d func: %(funcName)-35s thread: %(thread)-5d ',
                          datefmt="%H:%M:%S", filename='logs.log', filemode='w', level=logging.DEBUG)
     MAIN_SIM()
