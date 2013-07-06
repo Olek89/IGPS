@@ -29,7 +29,6 @@ class _GenerateSubMatrix(object):
         for i in range(len(radiuses)):
             defaultShape = _GenerateSubMatrixHelpers._Circle(self.center, self.center, radiuses[i])
             for x,y in defaultShape:
-                #print x,y 
                 subMatrix.data[x][y] += SMCC.SubMatrixCalculationConfiguration.probabilityDistribution[i]
         logging.info("Sub-matrix done for radius: {}".format(radius))
         #logging.debug(str(subMatrix)) #TODO: use super debug

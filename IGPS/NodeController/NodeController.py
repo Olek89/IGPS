@@ -188,7 +188,6 @@ class NodeController():
     def _GenerateFinalPositionMatrix(self, messageHeader):
         matrix = M.Matrix(C.Configuration.matrixSize)
         for nodePosition, subMatrix in self.homeNodeDb.YieldOverSubMatrices(messageHeader):
-            print nodePosition
             for xLocal in range(len(subMatrix.data)):
                 for yLocal in range(len(subMatrix.data[xLocal])):
                     # TODO: Add 3D

@@ -25,6 +25,7 @@ def MAIN_SIM():
     finally:
         for node in nodesList:
             node.StopNode()
+    print "SIMULATION ENDS"
     
 def CreateNodes(nodesIdToBeCreated = [2, 3, 6]):#, 1, 3, 4]):
     nodesList = []
@@ -48,5 +49,5 @@ if __name__== '__main__':
 # #                        level=logging.INFO)
 #                         level=logging.DEBUG)
     logging.basicConfig(format='%(asctime)s.%(msecs)03d %(message)-80s %(filename)-40s at line:%(lineno)-3d func: %(funcName)-35s thread: %(thread)-5d ',
-                         datefmt="%H:%M:%S", filename='example.log', filemode='w', level=logging.DEBUG)
+                         datefmt="%H:%M:%S", filename='logs.log', filemode='w', level=logging.DEBUG)
     MAIN_SIM()
