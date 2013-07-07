@@ -31,7 +31,7 @@ class NodeCommunicationReceivingModule():
         self.onSubMatrixSendingEnd = EH.EventHook()
         self.onReceivingAskOfNodePosition = EH.EventHook()
         self.onReceivingNodePosition = EH.EventHook()
-        
+    
     def Start(self):
         if self.launched:
             raise Exception("Already started")
@@ -42,21 +42,47 @@ class NodeCommunicationReceivingModule():
     def Stop(self):
         if self.launched:
             self.launched = False
-            self.process.join(timeout = 2)
+            self.process.join(timeout = 10)
             self.process._Thread__stop()
         
     def _MessageExpecting(self):
-        self.node_sock = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
-        ip = self.configuration.nodeIp
-        port = self.configuration.nodePort
-        logging.debug("Node receiver of node: {0} will use IP: {1}, PORT: {2}".format(self.nodeId, ip, port))
-        self.node_sock.bind( (ip, port) )
-        while self.launched:
-            data, addr = self.node_sock.recvfrom( 1024 )  # @UnusedVariable
-            if data is not None:
-                self._DataFromOtherNode(data)
-        self.node_sock.close()
-        logging.debug("Node receiver ends at: {0}".format(str(self.nodeId)))
+        try:
+            ip = self.configuration.nodeIp
+            port = self.configuration.nodePort
+            logging.debug("Node receiver of node: {0} will use IP: {1}, PORT: {2}".format(self.nodeId, ip, port))
+            
+    #         self.node_sock = socket.socket( socket.AF_INET, socket.SOCK_STREAM )
+    #         self.node_sock.bind((ip, port))
+    #         while self.launched:
+    #             self.node_sock.listen(5)
+    #             
+    #             while True:
+    #                 conn, addr = self.node_sock.accept()  # @UnusedVariable
+    #                 data = conn.recv(self.configuration.bufferSize)
+    #                 if data is None or data == "":
+    #                     print "break"
+    #                     break
+    #                 print "Dostalem :" + data
+    #                 conn.send("ACK" + data)
+    #                 self._DataFromOtherNode(data)
+    #                 conn.close()
+            
+            self.node_sock = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
+            self.node_sock.bind( (ip, port) )
+            while self.launched:
+                data, addr = self.node_sock.recvfrom( self.configuration.bufferSize )
+                if data is not None:
+                    print "RECEIVED:        " + data
+                    print "SEND ACK:     ACK" + data
+                    self.node_sock.sendto("ACK" + data, addr)
+                    self._DataFromOtherNode(data)
+            self.node_sock.close()
+            logging.debug("Node receiver ends at: {0}".format(str(self.nodeId)))
+            
+        except:
+            logging.critical("Node receiver almost closed at node {0}".format(self.nodeId))
+            self._MessageExpecting()
+        
     
     def _DataFromOtherNode(self, rawData):
         logging.debug("Node {0} received:  {1}".format(self.nodeId, rawData))

@@ -3,6 +3,7 @@ Created on 13-05-2013
 
 @author: Olek
 '''
+import time
 import socket, logging  # @UnusedImport
 from CommunicationModule import MessageTypes as MT
 from ConfigurationModule import NodeConnectionConfigurationProvider as NCCP
@@ -15,14 +16,54 @@ class NodeCommunicationSendingModule():
                                                     messageHeader = messageHeader)
     
     def _SendMessageToNode(self, messages, nodeId):
-        contact = NCCP.NodeConnectionConfigurationProvider(nodeId)
-        for message in messages:
-            logging.info("Node {0} to node {1}: {2}".format(self.dataToOtherNode.sendingNodeId, nodeId, message))
         
+        contact = NCCP.NodeConnectionConfigurationProvider(nodeId)
+
         sock = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
-        for message in messages:
+        sock.settimeout(1)
+        for i in range(len(messages)):
+            message = messages[i]
+            print "SENDING:         " + message
+            logging.info("Node {0} to node {1}: {2}".format(self.dataToOtherNode.sendingNodeId, nodeId, message))
             sock.sendto( message, (contact.nodeIp, contact.nodePort) )
+            receivedAck = None
+            try:
+                receivedAck = sock.recv(contact.bufferSize)
+            except:
+                logging.error("Timeout on receiving ack for: " + message)
+            finally:
+                if receivedAck != "ACK" + message:
+                    logging.error("Retry: " + message)
+                    i -= 1
+                else:
+                    print "RECEIVED ACK: " + receivedAck
         sock.close()
+        
+            #         for message in messages:
+#             logging.info("Node {0} to node {1}: {2}".format(self.dataToOtherNode.sendingNodeId, nodeId, message))
+#             sock.sendto( message, (contact.nodeIp, contact.nodePort) )
+#             data = sock.recv(NCCP.NodeConnectionConfigurationProvider.bufferSize)
+#             print data
+        
+        #try:
+        #sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#         sock.connect((contact.nodeIp, contact.nodePort))
+#         for i in range(len(messages)):
+#             message = messages[i]
+#             print "Wysylam :" + message
+#             sock.send(message)
+#             ack = sock.recv(NCCP.NodeConnectionConfigurationProvider.bufferSize)
+#             print "ACK :" + ack
+#             if ack != "ACK" + message:
+#                 raise Exception("Missing ACK")
+# #                 logging.error("Message resend: {0}".format(messages[i]))
+# #                 i -= 1
+#             time.sleep(0.01)
+#         sock.close()
+        #except:
+        #    print "Retry"
+        #    time.sleep(0.5)
+            #self._SendMessageToNode(messages, nodeId)
         
     def InformHomeAboutNewBeaconSignalReceive(self, destinationNodeId):
         dataToSend = self.dataToOtherNode.GetCommonMessageList()

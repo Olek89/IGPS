@@ -17,7 +17,7 @@ class Configuration():
     
     #TODO: Turn off fake mechanism
     useFakeCalculationModule = True
-    fakeSize = 5 # When greater then 13 issue appears
+    fakeSize = 35 # When greater then 13 issue appears
     
     nodesIdToBeCreated = [2, 3, 6]
     
