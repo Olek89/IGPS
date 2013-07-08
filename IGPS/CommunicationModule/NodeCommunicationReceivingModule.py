@@ -64,8 +64,8 @@ class NodeCommunicationReceivingModule():
             self.node_sock.close()
             logging.debug("Node receiver ends at: {0}".format(str(self.nodeId)))
             
-        except:
-            logging.info("Node receiver closed at node {0}".format(self.nodeId))
+        except Exception as e:
+            logging.info("Node receiver closed at node {0}, because of: {1}".format(self.nodeId, str(e)))
         self.ack_sock.close()
     
     def _SendAck(self, data, addr):
