@@ -3,6 +3,9 @@ Created on 03-05-2013
 
 @author: Olek
 '''
+import logging
+import uuid # unique file name
+import threading
 from DataAccessModule import NodeDb as NDB
 from DataAccessModule import HomeNodeDb as HNDB
 from ConfigurationModule import Configuration as C
@@ -12,8 +15,6 @@ from CommunicationModule import NodeCommunicationSendingModule as NCSM
 from Common import NodeStatesEnumerator as NSE
 from CalculationModule.CalculateSubMatrixModule import CalculateSubMatrixController as CSMCM
 from CalculationModule.NodePositionProviderModule import NodePositionProvider as NPP
-
-import logging
 from CommunicationModule.NodeCommunicationSendingModule import NodeCommunicationSendingModule
 
 class NodeController():
@@ -42,7 +43,7 @@ class NodeController():
         
         # Calculation Module
         self.calculationModule = CSMCM.CalculateSubMatrixController()
-        self.nodePositionProvider = NPP.NodePositionProvider()
+        self.nodePositionProvider = NPP.NodePositionProvider(self.nodeId)
         
         # Downloading queue manager
         self.isCurrentlyComputing = False
@@ -161,25 +162,44 @@ class NodeController():
         oldMatrix = self.homeNodeDb.GetBeaconPositionMatrix(messageHeader = dataFromOtherNode.messageHeader)
         record = self.homeNodeDb.GetRecordForMessageHeaderAndNodeId(messageHeader = dataFromOtherNode.messageHeader,
                                                                     nodeId = dataFromOtherNode.sendingNodeId)
+        globalVector = C.Configuration.matrixSize/2 - C.Configuration.subMatrixSize/2
         for xLocal in range(len(record.calculatedSubMatrix.data)):
             for yLocal in range(len(record.calculatedSubMatrix.data[xLocal])):
                 # TODO: Add 3D
                 if record.calculatedSubMatrix.data[xLocal][yLocal] != 0:
-                    oldMatrix.data[record.receivingNodePosition.X + xLocal][record.receivingNodePosition.Y + yLocal] += \
+                    oldMatrix.data[record.receivingNodePosition.X + xLocal + globalVector][record.receivingNodePosition.Y + yLocal + globalVector] += \
                     record.calculatedSubMatrix.data[xLocal][yLocal]
         self.homeNodeDb.UpdateBeaconPositionMatrix(messageHeader = dataFromOtherNode.messageHeader, matrix = oldMatrix)
         self.isCurrentlyComputing = False
     
     def _ReceiveMissingSubMatrices(self, messageHeader):
         nodesToAsk = self.homeNodeDb.GetNodesListForSpecificBeaconMessageIdentity(messageHeader = messageHeader, inState = NSE.NodeStatesEnumerator.DONE)
-        if (len(nodesToAsk) >= 1):
+        nodesSended = self.homeNodeDb.GetNodesListForSpecificBeaconMessageIdentity(messageHeader = messageHeader, inState = NSE.NodeStatesEnumerator.NOLONGERNEEDED)
+        # TODO: modify
+        if (len(nodesToAsk) >= 1 and nodesSended >= C.Configuration.minNumberToStartMatrixCreation):
             self.isCurrentlyComputing = True
             self._AskNodeToTransmitSubMatrix(messageHeader = messageHeader, nodeId = nodesToAsk[0])
             self.homeNodeDb.ChangeStateOfNodeForSpecificBeaconMessageIdentity(messageHeader = messageHeader,
                                                                               nodeId        = nodesToAsk[0],
                                                                               newState      = NSE.NodeStatesEnumerator.WHANT)
         else:
-            logging.critical(self.homeNodeDb.GetBeaconPositionMatrix(messageHeader = messageHeader))
+            logging.critical("Matrix created")
+            #logging.critical(self.homeNodeDb.GetBeaconPositionMatrix(messageHeader = messageHeader))
+            self.SaveMatrix(messageHeader)
             
+    def SaveMatrix(self, messageHeader):
+        process = threading.Thread(target = self._SaveMatrix, args=[messageHeader])
+        process.start()
+    
+    def _SaveMatrix(self, messageHeader):
+        tmp = str(self.homeNodeDb.GetBeaconPositionMatrix(messageHeader = messageHeader))
+        tmp = tmp.replace(" ", ",")
+        yRows = tmp.split("\n")
+        # Save as for graphic: y is pointing down while 0,0 is at the center
+        content = ";\n".join(yRows[::-1])
+        myFile = open("MATRICES\\" + str(uuid.uuid4()) +'_result.csv', 'w')
+        myFile.write(content)
+        myFile.close()
+                     
 if __name__ == "__main__":
     pass
