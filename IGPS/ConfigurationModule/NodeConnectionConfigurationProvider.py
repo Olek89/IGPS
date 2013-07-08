@@ -7,7 +7,7 @@ import socket
 
 class NodeConnectionConfigurationProvider():
     bufferSize = 100
-    reconnectionDelay = 1
+    reconnectionDelay = 0.2
     #TODO: Connect to configuration database 
     def __init__(self, nodeId):
         #Temporary solution

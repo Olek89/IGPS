@@ -18,7 +18,7 @@ def MAIN_SIM():
             
         SendFakeBeaconSignalForNodes(nodesList)
         
-        raw_input("Enter to end simulation...")
+        raw_input("Enter to end simulation...\n")
        
     except:
         raise

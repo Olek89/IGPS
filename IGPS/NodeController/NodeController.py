@@ -130,7 +130,7 @@ class NodeController():
                                                 value         = dataFromOtherNode.subMatrixValue)
     
     def _ReceivedSubMatrixSendingEnd(self, dataFromOtherNode):
-        print "SubMatrix end received"
+        print "SubMatrix end received from node: {0}".format(dataFromOtherNode.sendingNodeId)
         self.homeNodeDb.ChangeStateOfNodeForSpecificBeaconMessageIdentity(messageHeader = dataFromOtherNode.messageHeader,
                                                                           nodeId        = dataFromOtherNode.sendingNodeId,
                                                                           newState      = NSE.NodeStatesEnumerator.END)
