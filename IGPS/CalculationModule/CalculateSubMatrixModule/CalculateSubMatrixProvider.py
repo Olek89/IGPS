@@ -4,7 +4,7 @@ Created on 20-03-2013
 @author: Olek
 '''
 from CalculateRadius import CalculateRadius
-from ConfigurationModule import Configuration as C
+from ConfigurationModule import SubMatrixCalculationConfiguration as SMCC
 from _GenerateSubMatrix import _GenerateSubMatrix
 
 class CalculateSubMatrixProvider():
@@ -14,7 +14,7 @@ class CalculateSubMatrixProvider():
         self.subMatrixGenerator = _GenerateSubMatrix()
     
     def CalculateSubMatrix(self, beaconTimeStamp, receivingTime):
-        if C.Configuration.useFakeCalculationModule == True:
+        if SMCC.SubMatrixCalculationConfiguration.useFakeCalculationModule == True:
             subMatrix = self.FAKE()
         else:
             radius = self.radiusCalculateUnit.CalculateRadiusBasedOnDelay(beaconTimeStamp, receivingTime)
@@ -23,7 +23,7 @@ class CalculateSubMatrixProvider():
     
     def FAKE(self):
         from DataModels import Matrix as M
-        size = C.Configuration.fakeSize
+        size = SMCC.SubMatrixCalculationConfiguration.fakeSize
         subMatrix = M.Matrix(size)
         for i in range(size):
             for j in range(size):
