@@ -38,7 +38,15 @@ def SendFakeBeaconSignalForNodes(nodesList):
     messageHeader = MH.MessageHeader(beaconId = 1, homeNodeId = nodesList[1].nodeId, beaconTimeStamp = datetime.datetime.now())
     time.sleep(1)
     for node in nodesList:
-        microseconds = random.Random().randint(20000, 30000)
+        if node.nodeId == 1:
+            microseconds = 200000
+        elif node.nodeId == 2:
+            microseconds = 180000
+        elif node.nodeId == 3:
+            microseconds = 282000
+        else:
+            microseconds = random.Random().randint(80000, 200000)
+        
         receivingTime = messageHeader.beaconTimeStamp + datetime.timedelta(microseconds = microseconds)
         logging.info("Send fake beacon signal to node {0}".format(node.nodeId))
         node.beaconReceiver.onBeaconSignalReceive(messageHeader, receivingTime) # Fire event

@@ -8,8 +8,8 @@ class Configuration():
     #TODO: Cleanup configuration
     minNumberToStartMatrixCreation = 3
     
-    subMatrixSize = 201  # assumed that single cell is 1 x 1 meter
-    matrixSize    = 301 # assumed that single cell is 1 x 1 meter
+    subMatrixSize = 251 # assumed that subMatrix is always smaller then concatenation
+    matrixSize    = 301
     
     # TODO: Remove fake mechanism
     fakePositionMin = 20
