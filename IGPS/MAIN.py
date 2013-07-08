@@ -35,7 +35,7 @@ def CreateNodes():
     return nodesList
 
 def SendFakeBeaconSignalForNodes(nodesList):
-    messageHeader = MH.MessageHeader(beaconId = 1, homeNodeId = nodesList[0].nodeId, beaconTimeStamp = datetime.datetime.now())
+    messageHeader = MH.MessageHeader(beaconId = 1, homeNodeId = nodesList[1].nodeId, beaconTimeStamp = datetime.datetime.now())
     time.sleep(1)
     for node in nodesList:
         microseconds = random.Random().randint(20000, 30000)

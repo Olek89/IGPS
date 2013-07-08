@@ -12,7 +12,7 @@ class SubMatrixCalculationConfiguration():
     
     
     #TODO: Turn off fake mechanism
-    useFakeCalculationModule = True
+    useFakeCalculationModule = False
     fakeSize = 200
 
 if __name__ == "__main__":
