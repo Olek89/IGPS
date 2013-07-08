@@ -68,7 +68,7 @@ class NodeController():
     #===========================================================================
     def _BeaconSignalReceived(self, messageHeader, receivingTime):
         self.nodeDb.RegisterNewBeaconMessage(messageHeader, receivingTime, self.nodePositionProvider.GetCurrentPosition())
-        sender = NCSM.NodeCommunicationSendingModule(sourceNodeId = self.nodeId, messageHeader = messageHeader)
+        sender = NCSM.NodeCommunicationSendingModule(sourceNodeId = self.nodeId, messageHeader = messageHeader, nodeReceiver = self.nodeReceiver)
         sender.InformHomeAboutNewBeaconSignalReceive(messageHeader.homeNodeId)
     
     #===========================================================================
@@ -85,7 +85,7 @@ class NodeController():
                 self._AskNodeForCalculateSubMatrix(messageHeader = dataFromOtherNode.messageHeader, nodeId = node)
     
     def _AskNodeForCalculateSubMatrix(self, messageHeader, nodeId):
-        sender = NodeCommunicationSendingModule(sourceNodeId = self.nodeId, messageHeader = messageHeader)
+        sender = NodeCommunicationSendingModule(sourceNodeId = self.nodeId, messageHeader = messageHeader, nodeReceiver = self.nodeReceiver)
         sender.AskNodeToPrepareSubMatrix(destinationNodeId = nodeId)
         self.homeNodeDb.ChangeStateOfNodeForSpecificBeaconMessageIdentity(messageHeader = messageHeader,
                                                                           nodeId = nodeId,
@@ -98,7 +98,7 @@ class NodeController():
         self._InformHomeThatSubMatrixWasCalculated(messageHeader = dataFromOtherNode.messageHeader, nodeId = dataFromOtherNode.messageHeader.homeNodeId)
     
     def _InformHomeThatSubMatrixWasCalculated(self, messageHeader, nodeId):
-        sender = NodeCommunicationSendingModule(sourceNodeId = self.nodeId, messageHeader = messageHeader)
+        sender = NodeCommunicationSendingModule(sourceNodeId = self.nodeId, messageHeader = messageHeader, nodeReceiver = self.nodeReceiver)
         sender.InformHomeThatSubMatrixWasCreated(destinationNodeId = nodeId)
     
     def _RegisterReadyNodeToDownloadFromSubMatrix(self, dataFromOtherNode):
@@ -110,7 +110,7 @@ class NodeController():
             self._AskNodeToTransmitSubMatrix(messageHeader = dataFromOtherNode.messageHeader, nodeId = dataFromOtherNode.sendingNodeId)
     
     def _AskNodeToTransmitSubMatrix(self, messageHeader, nodeId):
-        sender = NodeCommunicationSendingModule(sourceNodeId = self.nodeId, messageHeader = messageHeader)
+        sender = NodeCommunicationSendingModule(sourceNodeId = self.nodeId, messageHeader = messageHeader, nodeReceiver = self.nodeReceiver)
         sender.RequestNodeToStartSubMatrixTransfer(destinationNodeId = nodeId)
         self.homeNodeDb.ChangeStateOfNodeForSpecificBeaconMessageIdentity(messageHeader = messageHeader,
                                                                           nodeId = nodeId,
@@ -118,7 +118,7 @@ class NodeController():
     
     def _SendCalculatedSubMatrix(self, dataFromOtherNode):
         record = self.nodeDb.GetRecordForMessageHeader(messageHeader = dataFromOtherNode.messageHeader)
-        sender = NodeCommunicationSendingModule(sourceNodeId = self.nodeId, messageHeader = dataFromOtherNode.messageHeader)
+        sender = NodeCommunicationSendingModule(sourceNodeId = self.nodeId, messageHeader = dataFromOtherNode.messageHeader, nodeReceiver = self.nodeReceiver)
         sender.SendSubMatrixToNode(destinationNodeId = dataFromOtherNode.sendingNodeId, subMatrix = record.subMatrix)
     
     def _AddPartialResult(self, dataFromOtherNode):
@@ -135,7 +135,7 @@ class NodeController():
                                                                           nodeId        = dataFromOtherNode.sendingNodeId,
                                                                           newState      = NSE.NodeStatesEnumerator.END)
         
-        sender = NodeCommunicationSendingModule(sourceNodeId = self.nodeId, messageHeader = dataFromOtherNode.messageHeader)
+        sender = NodeCommunicationSendingModule(sourceNodeId = self.nodeId, messageHeader = dataFromOtherNode.messageHeader, nodeReceiver = self.nodeReceiver)
         sender.AskNodeToSendItsPosition(destinationNodeId = dataFromOtherNode.sendingNodeId)
         self.homeNodeDb.ChangeStateOfNodeForSpecificBeaconMessageIdentity(messageHeader = dataFromOtherNode.messageHeader,
                                                                           nodeId        = dataFromOtherNode.sendingNodeId,
@@ -143,7 +143,7 @@ class NodeController():
     
     def _AskedForNodePosition(self, dataFromOtherNode):
         record = self.nodeDb.GetRecordForMessageHeader(messageHeader = dataFromOtherNode.messageHeader)
-        sender = NodeCommunicationSendingModule(sourceNodeId = self.nodeId, messageHeader = dataFromOtherNode.messageHeader)
+        sender = NodeCommunicationSendingModule(sourceNodeId = self.nodeId, messageHeader = dataFromOtherNode.messageHeader, nodeReceiver = self.nodeReceiver)
         sender.SendSelfPositionToNode(destinationNodeId  = dataFromOtherNode.sendingNodeId, otherNodePosition = record.nodePosition)
     
     def _ReceivedNodePosition(self, dataFromOtherNode):

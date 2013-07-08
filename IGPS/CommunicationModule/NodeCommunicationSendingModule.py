@@ -11,13 +11,20 @@ from DataModels import DataToOtherNode as DTON
 
 class NodeCommunicationSendingModule():
 
-    def __init__(self, sourceNodeId, messageHeader):
+    def __init__(self, sourceNodeId, messageHeader, nodeReceiver):
         self.dataToOtherNode = DTON.DataToOtherNode(sendingNodeId = sourceNodeId,
                                                     messageHeader = messageHeader)
+        self.nodeReceiver = nodeReceiver
     
     def _SendMessageToNode(self, messages, nodeId):
-        contact = NCCP.NodeConnectionConfigurationProvider(nodeId)
+        if self.dataToOtherNode.sendingNodeId != nodeId:
+            self._SendMEssageToNodeOverTCP(messages, nodeId)
+        else:
+            for message in messages:
+                self.nodeReceiver._DataFromOtherNode(message)
         
+    def _SendMEssageToNodeOverTCP(self, messages, nodeId):
+        contact = NCCP.NodeConnectionConfigurationProvider(nodeId)
         sock = self._GetSendingSocket()
         for i in range(len(messages)):
             message = messages[i]
