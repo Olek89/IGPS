@@ -15,9 +15,6 @@ class Configuration():
     fakePositionMin = 20
     fakePositionMax = 60
     
-    #TODO: Turn off fake mechanism
-    useFakeCalculationModule = True
-    fakeSize = 35 # When greater then 13 issue appears
     
     nodesIdToBeCreated = [2, 3, 6]
     
