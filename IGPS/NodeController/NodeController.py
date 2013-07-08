@@ -130,7 +130,7 @@ class NodeController():
                                                 value         = dataFromOtherNode.subMatrixValue)
     
     def _ReceivedSubMatrixSendingEnd(self, dataFromOtherNode):
-        print "End at:", self.nodeId
+        print "SubMatrix end received"
         self.homeNodeDb.ChangeStateOfNodeForSpecificBeaconMessageIdentity(messageHeader = dataFromOtherNode.messageHeader,
                                                                           nodeId        = dataFromOtherNode.sendingNodeId,
                                                                           newState      = NSE.NodeStatesEnumerator.END)
@@ -147,7 +147,6 @@ class NodeController():
         sender.SendSelfPositionToNode(destinationNodeId  = dataFromOtherNode.sendingNodeId, otherNodePosition = record.nodePosition)
     
     def _ReceivedNodePosition(self, dataFromOtherNode):
-        print "Position at:", self.nodeId
         self.homeNodeDb.SetReceivingNodePosition(messageHeader = dataFromOtherNode.messageHeader,
                                                  nodeId        = dataFromOtherNode.sendingNodeId,
                                                  position      = dataFromOtherNode.otherNodePosition)

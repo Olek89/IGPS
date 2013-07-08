@@ -23,8 +23,8 @@ class NodeCommunicationSendingModule():
         sock.settimeout(1)
         for i in range(len(messages)):
             message = messages[i]
-            print "SENDING:         " + message
-            logging.info("Node {0} to node {1}: {2}".format(self.dataToOtherNode.sendingNodeId, nodeId, message))
+#             print "SENDING:         " + message
+            logging.debug("Node {0} to node {1}: {2}".format(self.dataToOtherNode.sendingNodeId, nodeId, message))
             sock.sendto( message, (contact.nodeIp, contact.nodePort) )
             receivedAck = None
             try:
@@ -34,9 +34,10 @@ class NodeCommunicationSendingModule():
             finally:
                 if receivedAck != "ACK" + message:
                     logging.error("Retry: " + message)
+                    time.sleep(contact.reconnectionDelay) # Wait for reconnection
                     i -= 1
-                else:
-                    print "RECEIVED ACK: " + receivedAck
+#                 else:
+#                     print "RECEIVED ACK: " + receivedAck
         sock.close()
         
             #         for message in messages:

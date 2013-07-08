@@ -72,8 +72,8 @@ class NodeCommunicationReceivingModule():
             while self.launched:
                 data, addr = self.node_sock.recvfrom( self.configuration.bufferSize )
                 if data is not None:
-                    print "RECEIVED:        " + data
-                    print "SEND ACK:     ACK" + data
+#                     print "RECEIVED:        " + data
+#                     print "SEND ACK:     ACK" + data
                     self.node_sock.sendto("ACK" + data, addr)
                     self._DataFromOtherNode(data)
             self.node_sock.close()
@@ -85,7 +85,7 @@ class NodeCommunicationReceivingModule():
         
     
     def _DataFromOtherNode(self, rawData):
-        logging.debug("Node {0} received:  {1}".format(self.nodeId, rawData))
+        logging.info("Node {0} received:  {1}".format(self.nodeId, rawData))
         if  MT.MessageTypes.RECEIVED_BEACON_SIGNAL in rawData:
             parsedData = DFON.DataFromOtherNode(rawData.split(MT.MessageTypes.RECEIVED_BEACON_SIGNAL))
             self.onSignalReceivedAtForeignNode(parsedData)

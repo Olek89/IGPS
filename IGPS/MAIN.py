@@ -45,6 +45,6 @@ def SendFakeBeaconSignalForNodes(nodesList):
         time.sleep(0.2) # Introduce communication delays
 
 if __name__== '__main__':
-    logging.basicConfig(format='%(asctime)s.%(msecs)03d %(message)-80s %(filename)-40s at line:%(lineno)-3d func: %(funcName)-35s thread: %(thread)-5d ',
-                         datefmt="%H:%M:%S", filename='logs.log', filemode='w', level=logging.DEBUG)
+    logging.basicConfig(format='%(asctime)s.%(msecs)03d %(levelname)-8s %(message)-80s %(filename)-40s at line:%(lineno)-3d func: %(funcName)-35s thread: %(thread)-5d ',
+                         datefmt="%H:%M:%S", filename='logs.log', filemode='w', level=logging.INFO)
     MAIN_SIM()
