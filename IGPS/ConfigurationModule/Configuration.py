@@ -15,8 +15,7 @@ class Configuration():
     fakePositionMin = 20
     fakePositionMax = 60
     
-    
-    nodesIdToBeCreated = [2, 3, 6, 8, 12, 16]
+    nodesIdToBeCreated = [i for i in range(1,20)]
     
 if __name__ == "__main__":
     pass

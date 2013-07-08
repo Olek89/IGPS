@@ -13,7 +13,7 @@ class SubMatrixCalculationConfiguration():
     
     #TODO: Turn off fake mechanism
     useFakeCalculationModule = True
-    fakeSize = 3 # When greater then 13 issue appears
+    fakeSize = 10
 
 if __name__ == "__main__":
     pass

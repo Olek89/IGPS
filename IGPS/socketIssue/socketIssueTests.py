@@ -13,19 +13,19 @@ class socketIssueTests(unittest.TestCase):
     
     def testReceiverGetsAllMessages(self):
         receiverId = 2
-        expected = 10000
+        expected = 10000000
         
         receiver = SIH.socketIssueHelper(receiverId = receiverId)
         
         sender = NCSM.NodeCommunicationSendingModule(sourceNodeId = 1, messageHeader = "header")
         sender._SendMessageToNode(messages = [self.message for i in range(expected)], nodeId = receiverId)  # @UnusedVariable
         
-        self.assertEqual(expected, receiver.received)
         receiver.Stop()
+        self.assertEqual(expected, receiver.received)
         
     def testReceiverGetsAllMessagesWhenMultiNodeCommunication(self):
         receiverId = 4
-        expected = 3000
+        expected = 30000
         
         receiver = SIH.socketIssueHelper(receiverId = receiverId)
         
@@ -37,8 +37,8 @@ class socketIssueTests(unittest.TestCase):
         sender2._SendMessageToNode(messages, nodeId = receiverId)
         sender1._SendMessageToNode(messages, nodeId = receiverId)
         
-        self.assertEqual(expected, receiver.received)
         receiver.Stop()
+        self.assertEqual(expected, receiver.received)
 
 if __name__ == "__main__":
     unittest.main()

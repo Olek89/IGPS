@@ -12,8 +12,8 @@ class NodeConnectionConfigurationProvider():
     def __init__(self, nodeId):
         #Temporary solution
         self.nodeIp = str(socket.gethostbyname(socket.gethostname()))
-        self.nodePort = 3000 + int(nodeId)
-        
+        self.nodePort    = 3000 + 2*int(nodeId)
+        self.nodeAckPort = 3000 + 2*int(nodeId) + 1
 
 if __name__ == "__main__":
     pass

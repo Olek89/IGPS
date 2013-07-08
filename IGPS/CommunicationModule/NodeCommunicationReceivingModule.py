@@ -42,16 +42,18 @@ class NodeCommunicationReceivingModule():
     def Stop(self):
         if self.launched:
             self.launched = False
-            self.process.join(timeout = 10)
+            self.process.join(timeout = 2)
             self.process._Thread__stop()
         
     def _MessageExpecting(self):
         try:
             ip = self.configuration.nodeIp
             port = self.configuration.nodePort
+            ackPort = self.configuration.nodeAckPort
             logging.debug("Node receiver of node: {0} will use IP: {1}, PORT: {2}".format(self.nodeId, ip, port))
             
             self.ack_sock = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
+            self.ack_sock.bind((ip, ackPort))
             self.node_sock = socket.socket( socket.AF_INET, socket.SOCK_DGRAM )
             self.node_sock.bind( (ip, port) )
             while self.launched:
@@ -63,7 +65,7 @@ class NodeCommunicationReceivingModule():
             logging.debug("Node receiver ends at: {0}".format(str(self.nodeId)))
             
         except:
-            logging.critical("Node receiver closed at node {0}".format(self.nodeId))
+            logging.info("Node receiver closed at node {0}".format(self.nodeId))
         self.ack_sock.close()
     
     def _SendAck(self, data, addr):

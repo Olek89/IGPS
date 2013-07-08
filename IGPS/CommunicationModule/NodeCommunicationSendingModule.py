@@ -35,7 +35,7 @@ class NodeCommunicationSendingModule():
                 if receivedAck != "ACK" + message:
                     logging.error("Invalid ACK resend: " + message)
                     time.sleep(contact.reconnectionDelay) # Wait for reconnection
-                    i -= 1
+                    i = i - 2
         sock.close()
         
     def _GetSendingSocket(self):
