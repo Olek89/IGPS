@@ -9,6 +9,8 @@ from NodeController import NodeController as NC
 import logging
 import datetime, time, random
 
+homeNodeId = 1
+
 def MAIN_SIM():
     nodesList = CreateNodes()
         
@@ -16,9 +18,10 @@ def MAIN_SIM():
         for node in nodesList:
             node.StartNode()
             
-        SendFakeBeaconSignalForNodes(nodesList)
+        messageHeader = SendFakeBeaconSignalForNodes(nodesList)
         
-        raw_input("Enter to end simulation...\n")
+        raw_input("Enter to end simulation and save matrix...\n")
+        nodesList[homeNodeId].SaveMatrix(messageHeader)
        
     except:
         raise
@@ -35,7 +38,7 @@ def CreateNodes():
     return nodesList
 
 def SendFakeBeaconSignalForNodes(nodesList):
-    messageHeader = MH.MessageHeader(beaconId = 1, homeNodeId = nodesList[1].nodeId, beaconTimeStamp = datetime.datetime.now())
+    messageHeader = MH.MessageHeader(beaconId = 1, homeNodeId = nodesList[homeNodeId].nodeId, beaconTimeStamp = datetime.datetime.now())
     time.sleep(1)
     for node in nodesList:
         if node.nodeId == 1:
@@ -51,6 +54,7 @@ def SendFakeBeaconSignalForNodes(nodesList):
         logging.info("Send fake beacon signal to node {0}".format(node.nodeId))
         node.beaconReceiver.onBeaconSignalReceive(messageHeader, receivingTime) # Fire event
         time.sleep(0.2) # Introduce communication delays
+    return messageHeader
 
 if __name__== '__main__':
     logging.basicConfig(format='%(asctime)s.%(msecs)03d %(levelname)-8s %(message)-80s %(filename)-40s at line:%(lineno)-3d func: %(funcName)-35s thread: %(thread)-5d ',

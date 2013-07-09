@@ -182,10 +182,6 @@ class NodeController():
             self.homeNodeDb.ChangeStateOfNodeForSpecificBeaconMessageIdentity(messageHeader = messageHeader,
                                                                               nodeId        = nodesToAsk[0],
                                                                               newState      = NSE.NodeStatesEnumerator.WHANT)
-        else:
-            logging.critical("Matrix created")
-            #logging.critical(self.homeNodeDb.GetBeaconPositionMatrix(messageHeader = messageHeader))
-            self.SaveMatrix(messageHeader)
             
     def SaveMatrix(self, messageHeader):
         process = threading.Thread(target = self._SaveMatrix, args=[messageHeader])
@@ -197,9 +193,12 @@ class NodeController():
         yRows = tmp.split("\n")
         # Save as for graphic: y is pointing down while 0,0 is at the center
         content = ";\n".join(yRows[::-1])
-        myFile = open("MATRICES\\" + str(uuid.uuid4()) +'_result.csv', 'w')
+        fileName = "MATRICES\\" + str(uuid.uuid4()) +'_result.csv'
+        myFile = open(fileName, 'w')
         myFile.write(content)
         myFile.close()
-                     
+        
+        print "saved at: " + fileName
+        
 if __name__ == "__main__":
     pass
