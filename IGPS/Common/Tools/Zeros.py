@@ -7,11 +7,12 @@ Created on 24-03-2013
 def Zeros(*args):
     '''Making matrix of zeros of any shape. 
     Based on Stanford materials.
-    Example use: Zeros(3,2,4)'''
+    Example use: Zeros(3,2,1)
+    Produce r = [[[0], [0]], [[0], [0]], [[0], [0]]]'''
     if len (args) == 0: return 0
-    car = args[0]
-    cdr = args[1:]
-    return [Zeros(*cdr) for i in range(car)]
+    currentArray = args[0]
+    innerA = args[1:]
+    return [Zeros(*innerA) for i in range(currentArray)]
         
 if __name__ == "__main__":
     pass

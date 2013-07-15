@@ -18,12 +18,12 @@ class NodeCommunicationSendingModule():
     
     def _SendMessageToNode(self, messages, nodeId):
         if self.dataToOtherNode.sendingNodeId != nodeId:
-            self._SendMEssageToNodeOverTCP(messages, nodeId)
+            self._SendMessageToNodeOverTCP(messages, nodeId)
         else:
             for message in messages:
                 self.nodeReceiver._DataFromOtherNode(message)
         
-    def _SendMEssageToNodeOverTCP(self, messages, nodeId):
+    def _SendMessageToNodeOverTCP(self, messages, nodeId):
         contact = NCCP.NodeConnectionConfigurationProvider(nodeId)
         sock = self._GetSendingSocket()
         for i in range(len(messages)):
